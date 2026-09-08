@@ -1,0 +1,2 @@
+integration_draws,target_ate,sequential_eif_variance,coarsened_eif_variance,variance_gap,variance_ratio_coarsened_over_sequential,sequential_variance_reduction,asymptotic_sd_sequential,asymptotic_sd_coarsened
+1500000,0.2558486202827889,0.7419260901983051,0.7746556865203507,0.03272959632204549,1.044114362271985,0.04225050805353603,0.017227026327237153,0.017602905288847642

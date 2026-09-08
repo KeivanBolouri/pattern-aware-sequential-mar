@@ -1,0 +1,7 @@
+name,comparison_type,intercept,gamma,target_second_stage_rate
+CCMAR-low-L2-missingness,efficiency,0.2,0.0,0.2691760245344059
+CCMAR-moderate-L2-missingness,efficiency,-1.1,0.0,0.2691760245344059
+CCMAR-high-L2-missingness,efficiency,-2.0,0.0,0.2691760245344059
+Sequential-departure-gamma-0.75,identification,-1.4740731721255744,0.75,0.2691760245344059
+Sequential-departure-gamma-1.50,identification,-1.912534390308651,1.5,0.2691760245344059
+Sequential-departure-gamma-2.25,identification,-2.417620529513232,2.25,0.2691760245344059

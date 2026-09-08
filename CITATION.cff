@@ -1,0 +1,27 @@
+cff-version: 1.2.0
+message: "If you use this research draft or code, please cite it as an unpublished manuscript."
+title: "Pattern-aware causal estimation with monotone partially observed confounders"
+type: software
+authors:
+  - family-names: "Bolouri Siahkhalehsar"
+    given-names: "Keivan"
+    affiliation: "Department of Statistics, University of California, Irvine"
+version: 0.1.0
+date-released: 2026-09-08
+abstract: >-
+  Code and reproducibility materials for efficient estimation of a
+  point-exposure average treatment effect with two monotone partially observed
+  confounders under sequential missing at random.
+keywords:
+  - causal inference
+  - average treatment effect
+  - missing confounders
+  - efficient influence function
+  - sequential missing at random
+preferred-citation:
+  type: article
+  title: "Using Partially Observed Confounder Patterns under Monotone Sequential MAR: Efficient Estimation and the Cost of Complete-Case Coarsening"
+  authors:
+    - family-names: "Bolouri Siahkhalehsar"
+      given-names: "Keivan"
+  year: 2026

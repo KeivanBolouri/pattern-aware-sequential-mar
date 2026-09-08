@@ -1,0 +1,3 @@
+scenario,replicates,bootstrap_replicates,variance_ratio_coarsened_over_sequential,variance_ratio_ci_lower,variance_ratio_ci_upper,sequential_variance_reduction,variance_reduction_ci_lower,variance_reduction_ci_upper,interpretation
+CCMAR-compatible,2000,10000,1.0466610790094335,1.0278456151156463,1.067181899830444,0.0445808867313513,0.02709124279038123,0.06295262301399628,efficiency comparison: both estimators valid
+Sequential-MAR,2000,10000,1.3162013304822262,1.2314197643521378,1.4083365847966502,0.2402378140480813,0.18792922693357192,0.28994246767845006,not an efficiency comparison: coarsened CCMAR is invalid
