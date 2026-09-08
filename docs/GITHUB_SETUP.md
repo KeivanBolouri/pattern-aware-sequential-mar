@@ -2,19 +2,19 @@
 
 ## Status
 
-A private GitHub repository holds this project.
+A public GitHub repository holds this project for journal access.
 
 | Item | Value |
 | --- | --- |
 | Owner | KeivanBolouri |
 | Repository name | pattern-aware-sequential-mar |
-| Visibility | Private |
+| Visibility | Public |
 | Default branch | main |
 | Web URL | https://github.com/KeivanBolouri/pattern-aware-sequential-mar |
 | Clone URL | https://github.com/KeivanBolouri/pattern-aware-sequential-mar.git |
 | Short description | Efficient causal ATE estimation with monotone partially observed confounders under sequential MAR. |
 
-Keep the repository private until the theory has been independently reviewed and the authorship, license, funding, and conflict-of-interest information are settled.
+This repository is public so that journal editors and reviewers can open the reproducibility package without a GitHub login.
 
 ## What is on GitHub
 
@@ -22,8 +22,8 @@ The GitHub repository root is this folder (`pattern-aware-sequential-mar`). `REA
 
 Included:
 
-- manuscript source (`paper.tex`);
-- Python analysis code and an R mirror;
+- manuscript source (`paper.tex`, `appendix_crossfit.tex`);
+- Python analysis code, an independent-check implementation, and an R mirror;
 - verified synthetic Monte Carlo results;
 - manuscript figures in `figures/`;
 - documentation in `docs/`;
@@ -37,8 +37,6 @@ Not included:
 - patient, clinical, or other confidential data (none are present).
 
 ## Clone
-
-You must be signed in as an account with access.
 
     git clone https://github.com/KeivanBolouri/pattern-aware-sequential-mar.git
     cd pattern-aware-sequential-mar
@@ -72,7 +70,7 @@ Use this only if the GitHub copy does not exist yet. Do not initialize the GitHu
     git add .
     git commit -m "Add manuscript and verified reproducibility materials"
     git branch -M main
-    gh repo create pattern-aware-sequential-mar --private --source=. --remote=origin --push
+    gh repo create pattern-aware-sequential-mar --public --source=. --remote=origin --push
 
 ## Before making it public
 
@@ -85,4 +83,4 @@ Use this only if the GitHub copy does not exist yet. Do not initialize the GitHu
 
 ## Access
 
-Visibility is Private. Add collaborators from GitHub: Settings, then Collaborators. Do not switch visibility to Public until the items above are complete.
+Visibility is Public. Anyone with the URL can view and clone the repository.

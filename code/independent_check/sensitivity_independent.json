@@ -1,0 +1,61 @@
+{
+  "psi": 0.2558505160746848,
+  "efficiency": [
+    {
+      "label": "Low",
+      "intercept": 0.1999780726574426,
+      "complete": 0.5117000000000025,
+      "l1_only": 0.37902227098912056,
+      "exact_reduction_pct": 2.070768957257918,
+      "var_seq": 0.42534316168051434,
+      "var_cc": 0.4343372833131606
+    },
+    {
+      "label": "Moderate",
+      "intercept": -1.0990617616914289,
+      "complete": 0.23999999999999988,
+      "l1_only": 0.6507222709891233,
+      "exact_reduction_pct": 4.148399242057521,
+      "var_seq": 0.7618042868879753,
+      "var_cc": 0.7947747151472069
+    },
+    {
+      "label": "High",
+      "intercept": -2.000202804402041,
+      "complete": 0.11610000000000001,
+      "l1_only": 0.7746222709891231,
+      "exact_reduction_pct": 5.342590582851125,
+      "var_seq": 1.4384272133580782,
+      "var_cc": 1.5196139660013572
+    }
+  ],
+  "identification": [
+    {
+      "coarsened_bias": -0.01357222568422306,
+      "coarsened_coverage": 0.8356,
+      "sequential_bias": 0.0003022637925568783,
+      "sequential_coverage": 0.9542,
+      "gamma": 0.75,
+      "intercept": -1.473461423604729,
+      "complete": 0.24
+    },
+    {
+      "coarsened_bias": -0.026119212533218583,
+      "coarsened_coverage": 0.6132,
+      "sequential_bias": 0.00021422294598827385,
+      "sequential_coverage": 0.9558,
+      "gamma": 1.5,
+      "intercept": -1.9122023907469643,
+      "complete": 0.23999999999999494
+    },
+    {
+      "coarsened_bias": -0.037204917014982686,
+      "coarsened_coverage": 0.443,
+      "sequential_bias": -0.0004804762256215289,
+      "sequential_coverage": 0.9524,
+      "gamma": 2.25,
+      "intercept": -2.4175349083155067,
+      "complete": 0.24000000000000002
+    }
+  ]
+}

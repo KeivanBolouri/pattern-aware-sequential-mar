@@ -4,16 +4,15 @@ This repository contains the manuscript, source code, synthetic simulation
 outputs, result summaries, and figures for a two-stage sequential
 missing-at-random extension of causal ATE estimation with missing confounders.
 
-The private GitHub copy is:
+The public GitHub repository is:
 
 https://github.com/KeivanBolouri/pattern-aware-sequential-mar
 
-See docs/GITHUB_SETUP.md for clone, update, access, and public-release steps.
+See docs/GITHUB_SETUP.md for clone and update steps.
 
 ## Scientific status
 
-This is a research draft for scientific review. It is not a submitted or
-peer-reviewed publication.
+This repository is the reproducibility package for the accompanying manuscript.
 
 The generic sequential-MAR augmentation idea is established in the monotone
 missing-data literature. The contribution studied here is narrower:
@@ -48,6 +47,7 @@ is an identification comparison, not an efficiency comparison.
     |-- CITATION.cff
     |-- Makefile
     |-- paper.tex
+    |-- appendix_crossfit.tex
     |-- requirements.txt
     |-- requirements-lock.txt
     |-- code/
@@ -58,7 +58,8 @@ is an identification comparison, not an efficiency comparison.
     |   |-- crossfit_sequential_ate.py
     |   |-- sequential_mar_extension.R
     |   |-- make_manuscript_figures.py
-    |   +-- check_repository.py
+    |   |-- check_repository.py
+    |   +-- independent_check/
     |-- results/
     |   |-- main_verified/
     |   |-- oracle_sensitivity/
@@ -170,7 +171,7 @@ The compiled review PDF is included at:
 - docs/DATA_DICTIONARY.md: row counts, column definitions, and the difference between replicate-level data and summaries.
 - docs/VERIFICATION.md: completed reproducibility audit and headline numbers.
 - docs/ENVIRONMENT.md: Python, scientific-library, and TeX versions used in the audit.
-- docs/GITHUB_SETUP.md: private GitHub location, clone commands, and the checklist before a public release.
+- docs/GITHUB_SETUP.md: GitHub location and clone commands.
 
 ## Data and results
 

@@ -20,6 +20,14 @@
 \usepackage{hyperref}
 \usepackage[nameinlink,capitalize,noabbrev]{cleveref}
 
+%% ---------------------------------------------------------------------------
+%% Single source for two outputs.  \internaltrue keeps the review-status
+%% banner, the provisional-authorship line and the reproducibility-audit
+%% section; \internalfalse produces the submission version.
+\newif\ifinternal
+\internalfalse
+%% ---------------------------------------------------------------------------
+
 \definecolor{navy}{HTML}{17365D}
 \definecolor{teal}{HTML}{1B7F79}
 \definecolor{lightblue}{HTML}{EDF4FA}
@@ -35,7 +43,11 @@
 
 \pagestyle{fancy}
 \fancyhf{}
-\fancyhead[L]{\small Draft for scientific review}
+\ifinternal
+  \fancyhead[L]{\small Draft for scientific review}
+\else
+  \fancyhead[L]{\small Bolouri Siahkhalehsar}
+\fi
 \fancyhead[R]{\small Pattern-aware causal inference}
 \fancyfoot[C]{\small \thepage\ of \pageref*{LastPage}}
 \renewcommand{\headrulewidth}{0.4pt}
@@ -61,7 +73,7 @@
 \newcommand{\indep}{\perp\!\!\!\perp}
 \newcommand{\expit}{\operatorname{expit}}
 \newcommand{\norm}[1]{\left\lVert #1\right\rVert_2}
-\newcommand{\1}{\mathbbm{1}}
+\newcommand{\1}{\mathbf{1}}
 \newcommand{\cc}{\mathrm{cc}}
 \newcommand{\seq}{\mathrm{seq}}
 \newcommand{\F}{\mathrm{F}}
@@ -69,15 +81,17 @@
 \title{\vspace{-1.2cm}\textbf{Using Partially Observed Confounder Patterns under Monotone Sequential MAR: Efficient Estimation and the Cost of Complete-Case Coarsening}}
 \author{Keivan Bolouri Siahkhalehsar\\
 \small Department of Statistics, University of California, Irvine}
-\date{September 8, 2026\\[4pt]\small Manuscript draft for scientific review; authorship is provisional}
+\date{September 8, 2026\ifinternal\\[4pt]\small Manuscript draft for scientific review; authorship is provisional\fi}
 
 \begin{document}
 \maketitle
 
+\ifinternal
 \begin{center}
 \fcolorbox{navy}{lightblue}{\parbox{0.91\textwidth}{\small
-\textbf{Review status.} This document is a research manuscript draft, not a submitted or peer-reviewed article. The theoretical results and software have been internally checked, and the reported primary simulation was independently rerun from the archived code. Independent statistical review, a larger estimated-nuisance simulation, and a substantive data application remain necessary before journal submission.}}
+\textbf{Review status.} This document is a research manuscript draft, not a submitted or peer-reviewed article. The theoretical results and software have been internally checked, and the reported primary simulation was independently rerun from the archived code. Independent statistical review and a substantive data application remain necessary before journal submission.}}
 \end{center}
+\fi
 
 \begin{abstract}
 Methods for causal inference with several missing confounders often replace the full missingness pattern by a single indicator that all confounders are observed. This complete-case coarsening is convenient, but it discards records in which some confounders are observed and may require a stronger missingness assumption. We study a binary point exposure and two ordered, partially observed baseline confounders under monotone sequential missing at random (MAR). We specialize the standard sequential coarsening-at-random transformation to the full-data efficient influence function for the average treatment effect (ATE), give a tangent-space proof that the resulting observed-data influence function is canonical, and construct a cross-fitted one-step estimator. An exact drift identity yields sequential multiple robustness. In the common submodel in which both the sequential and complete-case assumptions are valid, we show that the efficiency-bound penalty from complete-case coarsening is
@@ -155,7 +169,7 @@ Let $V=(W,L_1,L_2)$. The causal estimand is
 \]
 
 \begin{assumption}[Causal identification]\label{ass:causal}
-For $a\in\{0,1\}$: (i) consistency, $Y=Y(A)$; (ii) conditional exchangeability, $Y(a)\indep A\mid V$; and (iii) treatment positivity, $\epsilon<e(V)<1-\epsilon$ almost surely for some $\epsilon>0$, where $e(v)=\Pp(A=1\mid V=v)$.
+For $a\in\{0,1\}$: (i) consistency, $Y=Y(A)$; (ii) conditional exchangeability, $Y(a)\indep A\mid V$; and (iii) treatment positivity, $\epsilon_e<e(V)<1-\epsilon_e$ almost surely for some $\epsilon_e>0$, where $e(v)=\Pp(A=1\mid V=v)$.
 \end{assumption}
 
 Under \cref{ass:causal}, writing $\mu_a(v)=\E(Y\mid A=a,V=v)$,
@@ -176,7 +190,8 @@ Let
 \pi_1(Z_0)=\Pp(R_1=1\mid Z_0),\qquad
 \pi_2(Z_1)=\Pp(C_2=1\mid R_1=1,Z_1),
 \]
-and suppose $\pi_j\ge\epsilon>0$ almost surely for $j=1,2$.
+and suppose there is $\epsilon_\pi>0$ such that $\pi_1(Z_0)\ge\epsilon_\pi$ and
+$\pi_2(Z_1)\ge\epsilon_\pi$ almost surely.
 \end{assumption}
 
 Treatment and outcome are included in $Z_0$, so both response probabilities may depend on $A$ and $Y$. These are MAR/CAR restrictions because the hazards depend only on information observed at the corresponding stage. They are not outcome-independent missing-not-at-random restrictions.
@@ -217,8 +232,20 @@ Q_1(Z_1)=\E\{G(Z_2)\mid Z_1\},\qquad
 Q_0(Z_0)=\E\{G(Z_2)\mid Z_0\}.
 \end{equation}
 
+Throughout, $\mathcal M$ denotes the observed-data model: the set of laws of
+$O$ generated by an unrestricted full-data law $p(z_0,l_1,l_2)$ together with
+unrestricted response probabilities $\pi_1,\pi_2$ satisfying \cref{ass:smar}
+and its positivity bound. \Cref{lem:tangent} in \cref{app:tangent} shows that
+the tangent space of $\mathcal M$ is all of $L_2^0(P_O)$, the mean-zero square-integrable
+functions of $O$. The model is therefore nonparametric in the observed-data
+sense, a pathwise differentiable parameter has exactly one gradient, and that
+gradient is its efficient influence function.
+
 \begin{theorem}[Canonical gradient]\label{thm:eif}
-Suppose \cref{ass:causal,ass:smar} hold and $D_{\F}\in L_2(P)$. In the nonparametric observed-data model induced by monotone sequential MAR, the efficient influence function for $\psi$ is
+Suppose \cref{ass:causal,ass:smar} hold, $D_{\F}\in L_2(P)$, and the response
+probabilities satisfy the two-sided bounds of \cref{lem:tangent}. In the
+nonparametric observed-data model $\mathcal M$ induced by monotone sequential
+MAR, the efficient influence function for $\psi$ is
 \begin{equation}\label{eq:seq-eif}
 \boxed{
 D_{\seq}(O)=Q_0-\psi
@@ -258,8 +285,16 @@ $q_0=\E(D_{\F}\mid Z_0)=Q_0-\psi$. Candidate \cref{eq:seq-eif} can be written
 D_{\seq}=q_0+\frac{R_1}{\pi_1}(q_1-q_0)
 +\frac{R_2}{\pi_1\pi_2}(D_{\F}-q_1).
 \end{equation}
+\Cref{lem:tangent} shows that these five components are mutually orthogonal
+and that their closed linear span is the whole of $L_2^0(P_O)$; every tangent
+direction is therefore a sum of the five types, which is what makes the
+verification below exhaustive rather than merely suggestive.
+
 The three terms in \cref{eq:eif-centered} belong respectively to
-$\mathcal T_0,\mathcal T_1,$ and $\mathcal T_2$: the required conditional means vanish by iterated expectation. Thus $D_{\seq}$ belongs to the observed-data tangent space and is orthogonal to the two response-mechanism tangent components.
+$\mathcal T_0,\mathcal T_1,$ and $\mathcal T_2$, because the required conditional
+means vanish by iterated expectation; the same argument gives
+$\E(D_{\seq})=0$. Thus $D_{\seq}$ belongs to the observed-data tangent space and is
+orthogonal to the two response-mechanism tangent components.
 
 It remains to verify that $D_{\seq}$ represents the pathwise derivative. For $s_0\in\mathcal T_0$,
 \[
@@ -273,7 +308,14 @@ The last equality uses $\E(s_1\mid Z_0)=0$ and $q_1=\E(D_{\F}\mid Z_1)$. Similar
 \[
 \E(D_{\seq}R_2s_2)=\E\{(D_{\F}-q_1)s_2\}=\E(D_{\F}s_2).
 \]
-Finally, $\psi$ does not depend on $\pi_1$ or $\pi_2$, and the inner products of $D_{\seq}$ with their score components are zero. Hence \cref{eq:eif-centered} represents the derivative along every tangent direction. Because it lies in the tangent space, it is the canonical gradient and has minimum variance among regular influence functions \citep{tsiatis2006}.
+Finally, $\psi$ does not depend on $\pi_1$ or $\pi_2$, and the inner products of
+$D_{\seq}$ with their score components are zero; this is verified in
+\cref{app:scores}. By \cref{lem:tangent} the five families of scores exhaust the
+tangent space, so \cref{eq:eif-centered} represents the derivative along every
+tangent direction and $D_{\seq}$ is a gradient. Because it also lies in the
+tangent space, it is the canonical gradient, and it is the unique influence
+function of $\psi$ in $\mathcal M$; in particular it has minimum variance among
+regular influence functions \citep{tsiatis2006}.
 \end{proof}
 
 \begin{remark}
@@ -286,7 +328,7 @@ The proof is a two-stage specialization of general monotone-MAR/CAR theory \cite
 
 Let $\eta=(e,\mu_0,\mu_1,\pi_1,\pi_2,Q_0,Q_1)$. With nuisance estimates trained outside observation $i$'s validation fold, define
 \begin{equation}\label{eq:Hhat}
-\widehat H_i=widehat Q_{0,i}
+\widehat H_i=\widehat Q_{0,i}
 +\frac{R_{1i}}{\widehat\pi_{1,i}}(\widehat Q_{1,i}-\widehat Q_{0,i})
 +\frac{R_{2i}}{\widehat\pi_{1,i}\widehat\pi_{2,i}}
 (\widehat G_i-\widehat Q_{1,i}),
@@ -314,7 +356,10 @@ Q_0^{\bar G}=\E(\bar G\mid Z_0),
 and let $H(\bar\eta)$ denote \cref{eq:Hhat} with bars in place of hats.
 
 \begin{proposition}[Exact missingness-layer drift]\label{prop:drift}
-Under \cref{ass:smar},
+Let all expectations be taken under the true law $P$, and let $Q_0^{\bar G}$ and
+$Q_1^{\bar G}$ denote true conditional expectations of the working pseudo-outcome
+$\bar G$. Under \cref{ass:smar} alone, and with no requirement that any working
+nuisance be correct,
 \begin{align}
 \E\{H(\bar\eta)\}-\E(\bar G)
 ={}&\E\!\left[\left(1-\frac{\pi_1}{\bar\pi_1}\right)
@@ -375,11 +420,28 @@ The variance estimator in \cref{eq:se} is consistent, and the estimator attains 
 Conditional on the training samples, cross-fitting makes each validation-fold nuisance fit fixed. Decompose $\widehat\psi-\psi$ into the empirical mean of the true influence function, an empirical-process difference on the validation fold, and the conditional drift. The $L_2$ convergence in (ii) makes the second term $o_p(n^{-1/2})$ without Donsker conditions. Applying \cref{prop:drift} fold by fold and Cauchy--Schwarz bounds the drift by the three products in (iii), up to constants from positivity. Thus the remainder is $o_p(n^{-1/2})$. The central limit theorem applies to the first term. Consistency of the empirical second moment follows from (ii) and uniform integrability. Efficiency follows from \cref{thm:eif}. This is the standard cross-fitting argument \citep{chernozhukov2018} specialized to \cref{eq:seq-eif}.
 \end{proof}
 
-The conditions do not require every nuisance to converge at $n^{-1/4}$; that rate for each member of a product is merely a simple sufficient condition. Very small response probabilities remain a practical threat even when formal positivity holds, motivating weight diagnostics, truncation sensitivity analyses, and estimators targeted for finite-sample stability.
+The conditions in (iii) constrain products of errors, not individual rates, so
+one factor may converge slowly if its partner converges quickly. The familiar
+$n^{-1/4}$ heuristic needs care: two factors that are exactly $O_p(n^{-1/4})$
+give a product that is $O_p(n^{-1/2})$, which does \emph{not} satisfy (iii). A
+correct simple sufficient condition is that each factor be $o_p(n^{-1/4})$, or
+more generally that the two rates $r_1,r_2$ satisfy $r_1r_2=o(n^{-1/2})$. Very
+small response or treatment probabilities remain a practical threat even when
+formal positivity holds, motivating weight diagnostics, truncation sensitivity
+analyses, and estimators targeted for finite-sample stability.
 
 \section{Exact cost of complete-case coarsening}
 
-Let $S=R_2$ and suppose the analyst replaces $(R_1,R_2)$ by the single complete-case indicator $S$. The next restriction creates a submodel in which both approaches identify the same target.
+Let $S=R_2$ and suppose the analyst replaces $(R_1,R_2)$ by the single
+complete-case indicator $S$, so that the working data are
+$O^{\cc}=(Z_0,S,SL_1,SL_2)$. Such an analyst cannot use $\pi_2$, which is a
+function of $L_1$ and so is unavailable exactly on the records that $S$
+discards; the estimable response functional is instead
+\begin{equation}\label{eq:rho}
+\rho(Z_0)=\Pp(S=1\mid Z_0)=\pi_1(Z_0)\,\E\{\pi_2(Z_1)\mid Z_0\}.
+\end{equation}
+The next restriction creates a submodel in which both approaches identify the
+same target and, in addition, $\rho=\pi_1\pi_2$.
 
 \begin{assumption}[Common-validity submodel]\label{ass:common}
 The second-stage response probability does not depend on the intermediate confounder after $Z_0$:
@@ -388,8 +450,8 @@ The second-stage response probability does not depend on the intermediate confou
 \]
 \end{assumption}
 
-Then $S\indep(L_1,L_2)\mid Z_0$, with $\Pp(S=1\mid Z_0)=\pi_1(Z_0)\pi_2(Z_0)$, so CCMAR holds. The efficient influence function based only on
-$O^{\cc}=(Z_0,S,SL_1,SL_2)$ is
+Then $S\indep(L_1,L_2)\mid Z_0$ and $\rho(Z_0)=\pi_1(Z_0)\pi_2(Z_0)$, so CCMAR
+holds. The efficient influence function based only on $O^{\cc}$ is
 \begin{equation}\label{eq:cc-eif}
 D_{\cc}(O^{\cc})=Q_0-\psi+
 \frac{S}{\pi_1\pi_2}(G-Q_0).
@@ -425,14 +487,33 @@ because $R_1$ and $C_2$ are Bernoulli with the stated sequential probabilities. 
 \begin{corollary}[When the gain is strict]\label{cor:strict}
 The pattern-aware efficiency bound is strictly smaller if and only if
 \[
-\Pp\!\left[pi_2(Z_0)<1\ \text{and}\ Q_1(Z_1)\ne Q_0(Z_0)\right]>0.
+\Pp\!\left\{\pi_2(Z_0)<1\ \text{and}\ Q_1(Z_1)\ne Q_0(Z_0)\right\}>0.
 \]
 Equivalently, strict improvement requires second-stage missingness and residual predictive information in $L_1$ about the full-data efficient score after conditioning on $Z_0$.
 \end{corollary}
 
-When $\pi_2$ depends on $L_1$, the complete-case probability conditional on $Z_0$ averages over an unobserved determinant of selection, and $S\indep(L_1,L_2)\mid Z_0$ generally fails. Then \cref{eq:variance-gap} is not an efficiency comparison: the coarsened estimator may target the wrong observed-data functional. This is the distinction between an \emph{information loss} under common validity and an \emph{identification failure} under sequential MAR alone.
+When $\pi_2$ depends on $L_1$, the complete-case probability conditional on $Z_0$
+averages over an unobserved determinant of selection, and $S\indep(L_1,L_2)\mid Z_0$
+generally fails. Then \cref{eq:variance-gap} is not an efficiency comparison:
+the coarsened estimator may target the wrong observed-data functional. This is
+the distinction between an \emph{information loss} under common validity and an
+\emph{identification failure} under sequential MAR alone.
 
-\section{Simulation studies}
+Outside \cref{ass:common} the coarsened analyst must also replace the two
+quantities in \cref{eq:cc-eif} that are no longer estimable from $O^{\cc}$:
+$\pi_1\pi_2$ becomes $\rho(Z_0)$ of \cref{eq:rho}, and $Q_0(Z_0)=\E(G\mid Z_0)$
+becomes the complete-case projection
+\[
+Q_0^{\cc}(Z_0)=\E(G\mid Z_0,S=1)
+=\frac{\E\{\pi_2(Z_1)Q_1(Z_1)\mid Z_0\}}{\E\{\pi_2(Z_1)\mid Z_0\}},
+\]
+which coincides with $Q_0$ under \cref{ass:common} and differs from it otherwise.
+Neither substitution restores consistency. \Cref{sec:sim} reports the version
+that uses $\rho$ together with the true $Q_0$; substituting $Q_0^{\cc}$ as well
+changes the reported bias by less than $2\times10^{-5}$, so the identification
+conclusion does not depend on which of the two coarsened analysts is simulated.
+
+\section{Simulation studies}\label{sec:sim}
 
 \subsection{Design}
 
@@ -444,7 +525,11 @@ Y\mid A=1\sim\mathrm{Beta}(4,2),\\
 L_1\mid A,Y&\sim\mathrm{Bernoulli}\{\expit(-0.6+0.5A+0.25Y+0.1AY)\},\\
 L_2\mid A,Y,L_1&\sim N(A+Y+2.5L_1Y,1.25^2).
 \end{align*}
-Numerical refactorization of this joint law gives $e(V)$ and $\mu_a(V)$; numerical integration gives the true ATE $\psi=0.2558486$. Response at stage one follows
+Numerical refactorization of this joint law gives $e(V)$ and $\mu_a(V)$;
+numerical integration gives the true ATE $\psi=0.25585$. The target is quoted to
+five decimal places, which is the precision to which independent quadrature
+schemes agree; all bias and coverage summaries use the value computed at full
+machine precision. Response at stage one follows
 \[
 \pi_1=\expit(2+0.1A+0.1Y).
 \]
@@ -456,7 +541,38 @@ whereas in the sequential-MAR scenario,
 \[
 \pi_2=\expit(-1.9+0.1A+0.1Y+2.2L_1).
 \]
-The first permits an efficiency comparison; the second violates CCMAR and permits an identification comparison. Confidence intervals use the empirical variance of the oracle influence values in each sample.
+The first permits an efficiency comparison; the second violates CCMAR and
+permits an identification comparison. Confidence intervals use the empirical
+variance of the oracle influence values in each sample and the normal quantile
+$1.96$.
+
+Two features of this design should be stated plainly, because they govern how
+sharp the comparisons below can be.
+
+First, the design does not satisfy the uniform treatment-positivity bound of
+\cref{ass:causal}(iii). Because $L_2$ is Gaussian and therefore unbounded, and
+$e(V)$ is monotone in $L_2$ for each $L_1$, no $\epsilon_e>0$ exists with
+$e(V)>\epsilon_e$ almost surely. What does hold is the weaker integrability
+condition that makes the efficiency bound finite: $\E\{1/e(V)\}=4.04$ and
+$\E[1/\{1-e(V)\}]=5.65$, so $\Var(D_{\F})<\infty$. The design should therefore
+be read as a stress test of the missingness layer under imperfect overlap rather
+than as an instance of the model in which \cref{thm:asymptotics} is stated. A
+design with bounded $L_2$ would satisfy \cref{ass:causal}(iii) exactly; we retain
+the Gaussian specification because it is the natural continuous companion to a
+binary screening variable, and because the qualitative conclusions are governed
+by the missingness mechanism rather than by the tail of $e$.
+
+Second, overlap is correspondingly uncomfortable. About $0.6\%$ of the population
+has $e(V)$ outside $[0.01,0.99]$ and about $7\%$ outside $[0.05,0.95]$; the mean
+inverse-probability weight is $2.0$ and its $99$th percentile is $9.9$. The
+full-data influence function is heavy tailed, with
+$\E(G^4)^{1/4}=3.20$ against $\Var(G)^{1/2}=0.53$, so Monte Carlo estimates of
+\emph{variances} converge much more slowly than estimates of means: with 2,000
+replicates an empirical standard deviation carries roughly $1.6\%$ relative Monte
+Carlo error. This is why the efficiency comparison below is anchored on a
+deterministic evaluation of \cref{eq:variance-gap} rather than on the simulated
+variance ratio, and why the estimated-nuisance study in \cref{app:crossfit}
+requires large samples before its intervals calibrate.
 
 Three estimators are reported: the full-data ATE estimator, the coarsened CCMAR estimator in \cref{eq:cc-eif}, and the pattern-aware sequential estimator in \cref{eq:seq-eif}. A paired bootstrap over the same Monte Carlo replicates quantifies simulation uncertainty in the variance reduction. Separately, the expectation in \cref{eq:variance-gap} was evaluated using $1.5$ million numerical integration draws.
 
@@ -487,7 +603,23 @@ Sequential-MAR & Full data & 0.00043 & 0.01038 & 0.01038 & 95.50\% \\
 \end{threeparttable}
 \end{table}
 
-The empirical variance ratio (coarsened divided by sequential) was 1.0467 in the common-validity scenario, corresponding to 4.46\% lower variance for the sequential estimator. A paired bootstrap with 10,000 resamples gave a Monte Carlo 95\% interval of 2.71\%--6.30\%. Numerical evaluation of \cref{eq:variance-gap} produced influence-function variances 0.77466 and 0.74193 for the coarsened and sequential methods, respectively: a ratio of 1.0441 and a 4.23\% reduction. The agreement supports the algebraic identity and the simulation implementation.
+The empirical variance ratio (coarsened divided by sequential) was 1.0467 in the common-validity scenario, corresponding to 4.46\% lower variance for the sequential estimator. A paired bootstrap with 10,000 resamples gave a Monte Carlo 95\% interval of 2.71\%--6.30\%. Evaluating \cref{eq:variance-gap} by Monte Carlo integration with $1.5$ million
+draws produced influence-function variances 0.77466 and 0.74193 for the
+coarsened and sequential methods respectively: a ratio of 1.0441 and a 4.23\%
+reduction. That evaluation is itself random. Recomputing the same expectations by
+deterministic product quadrature---the integrand is four dimensional with two
+binary coordinates, so the integral is exactly computable---gives 0.79524 and
+0.76224, a ratio of 1.0433 and a 4.15\% reduction. The ratios agree to within
+$0.1\%$ while the absolute variances differ by about $2.7\%$, which is the
+signature of integration error rather than of an algebraic discrepancy; the
+quadrature value is the one to quote. The simulated reduction
+is therefore consistent with the identity, but the comparison is not a sharp
+one: the bootstrap interval spans about 3.6 percentage points, so agreement to
+within a quarter of a percentage point should not be read as a precise
+confirmation. The deterministic evaluation of \cref{eq:variance-gap}, not the
+simulated variance ratio, is the authoritative statement of the size of the
+gain, and the simulation is best read as evidence that the estimator implements
+\cref{eq:seq-eif} correctly.
 
 In the sequential-only scenario, the coarsened estimator's bias was large relative to its standard deviation, and nominal coverage fell to 46.9\%. The sequential estimator remained approximately unbiased with 95.45\% coverage. This contrast should not be described as an efficiency gain, because CCMAR is false in this scenario.
 
@@ -545,9 +677,42 @@ $\gamma$ & Coarsened bias & Coarsened coverage & Sequential bias & Sequential co
 \label{fig:sensitivity}
 \end{figure}
 
-\subsection{Estimated-nuisance implementation check}
+\subsection{Estimated nuisances}\label{sec:estimated-nuisance}
 
-The reproducibility package also contains a fully out-of-fold implementation using weighted treatment and outcome regressions and flexible sequential regressions. In a preliminary 100-replicate check with $n=4{,}000$ and true ATE 0.5, sequential-estimator bias was 0.0068 (Monte Carlo standard error 0.0068) under CCMAR and $-0.0027$ (0.0068) under sequential MAR. Coverage was 91\% and 94\%, respectively. These results confirm that the end-to-end code runs, but 100 replicates are insufficient for precise evaluation, and the 91\% coverage signals that standard-error calibration or nuisance learning may need improvement. We therefore treat this as an implementation check rather than confirmatory evidence.
+The experiments above deliberately hold the nuisance functions fixed at their
+true values so that the missingness layer is isolated. A separate study, reported
+in full in \cref{app:crossfit}, replaces every nuisance with a cross-fitted
+estimate on the same data-generating law. Its conclusions are worth stating here
+because they qualify the practical reading of \cref{eq:variance-gap}.
+
+Three points carry over. First, the cross-fitted pattern-aware estimator is
+consistent and its intervals calibrate as $n$ grows, but they are too short at
+moderate $n$: the mean estimated standard error is about two thirds of the
+empirical standard deviation at $n=2{,}500$, rising to roughly six sevenths at
+$n=20{,}000$, so coverage is well below nominal over the whole range studied.
+The deficit is in \cref{eq:se}, which does not capture the across-sample
+variability that fitted nuisances contribute while the second-order remainder is
+still appreciable; a bootstrap or a nuisance-aware variance estimator is
+preferable at these sample sizes.
+
+Second, at the sample size used above the precision comparison between the
+coarsened and pattern-aware estimators is swamped by nuisance estimation error,
+and the pattern-aware estimator is in fact marginally the more variable of the
+two at $n=2{,}500$ and $n=5{,}000$. We therefore make no claim of a
+finite-sample precision advantage. The reason is structural: both estimators
+must learn $e(V)$ and $\mu_a(V)$ from complete records only, of which there are
+roughly $600$ when $n=2{,}500$, in a region where $e(V)$ approaches $0.01$. A
+layer-by-layer decomposition supports this reading---holding the treatment and
+outcome regressions at their true values recovers most, though not all, of the
+oracle behaviour, whereas holding the response models fixed instead recovers
+almost none of it.
+
+Third, the identification contrast survives nuisance estimation intact. The
+coarsened estimator's bias under sequential MAR is unchanged by sample size, so
+its coverage falls as $n$ grows. The efficiency claim of
+\cref{eq:variance-gap} is an exact statement about influence functions at known
+nuisances; the identification claim is what an analyst can rely on at realistic
+sample sizes.
 
 \section{Discussion}
 
@@ -557,13 +722,61 @@ The model comparison also clarifies assumption strength. Under \cref{ass:common}
 
 The present results sit between two literatures. General sequential augmentation and efficiency under monotone attrition are well established \citep{rrz1994,gill1997,barnwell2025}. Recent causal work addresses complete-case MAR \citep{levis2025}, multiple missing confounders or exposures under other MAR/MNAR restrictions \citep{wen2026}, and broad numerical comparisons of practical missing-confounder estimators \citep{benz2025,williamson2026}. The narrow value added here is the exact causal score comparison between retaining and collapsing a monotone intermediate pattern. We do not solve the nonmonotone $2^q$-pattern projection problem under the original CCMAR model, and we do not claim the generic monotone-MAR influence-function transformation as new.
 
-Several limitations delimit the current evidence. First, all numerical results are synthetic; there is no substantive data application. Second, the main and sensitivity simulations use oracle nuisance functions to isolate the missingness mechanism. Third, the estimated-nuisance study is preliminary and does not yet evaluate a broad library of learners, nuisance misspecification configurations, near-positivity, sample sizes, or confidence-interval corrections. Fourth, monotonicity rules out $L_2$-only records and may be implausible in unstructured electronic health records. Fifth, MAR and causal exchangeability are not testable from the observed data alone. Finally, independent expert checking of the canonical-gradient and remainder proofs is necessary before submission.
+Several limitations delimit the evidence presented here. All numerical results
+are synthetic: the ordered-acquisition mechanism that motivates the model is
+illustrated rather than demonstrated on real data. The main and sensitivity
+experiments hold the nuisance functions at their true values in order to isolate
+the missingness layer, and \cref{app:crossfit} shows that at moderate sample
+sizes the $4.2\%$ efficiency difference is smaller than the error incurred in
+estimating the treatment and outcome regressions from complete records alone, so
+that no finite-sample precision advantage is demonstrated at those sample sizes;
+the identification contrast, by comparison, survives nuisance estimation intact.
+The influence-function variance estimator in \cref{eq:se} is also poorly
+calibrated at moderate $n$, and we have not developed the nuisance-aware
+alternative that the results call for. The simulation design itself satisfies
+treatment positivity only in the integrable sense described in \cref{sec:sim},
+not in the uniform sense assumed by \cref{ass:causal}(iii), and so is better read
+as a stress test than as a canonical instance of the model. The
+estimated-nuisance study uses a single spline-based learner rather than a
+library, and does not vary nuisance misspecification. Monotonicity
+rules out $L_2$-only records and may be implausible in unstructured electronic
+health records. Finally, neither sequential MAR nor causal exchangeability is
+testable from the observed data alone, so the choice between the sequential and
+complete-case models must rest on knowledge of how the data were collected
+rather than on any fit statistic computed after the fact.
 
-Before journal submission, the following additions are priorities: (i) a preregistered, larger cross-fitted simulation with at least 1,000--2,000 replicates per design point; (ii) explicit nuisance misspecification and learner comparisons; (iii) weight-truncation and near-positivity sensitivity analyses; (iv) a real or high-fidelity plasmode application with a scientifically defensible ordering of confounder acquisition; (v) a public software interface with unit tests and documented diagnostics; and (vi) independent semiparametric review. Subject to those additions, the paper is best positioned as a focused methods contribution on the cost of complete-case coarsening rather than as a general solution to arbitrary nonmonotone missing confounders.
+Three extensions would most strengthen the practical case. The first is a real
+or high-fidelity plasmode application in which the acquisition ordering is
+scientifically defensible, so that the choice of missingness model can be argued
+from the data-collection protocol. The second is a systematic comparison of
+learners together with explicit nuisance misspecification, and a benchmark
+against the standard practical alternatives---multiple imputation of $(L_1,L_2)$
+followed by a doubly robust estimator, and the complete-case estimator of
+\citet{levis2025} as implemented by its authors---since \cref{cor:robustness}
+describes a layered robustness whose finite-sample value has not been mapped. A
+variance estimator that accounts for nuisance estimation belongs in the same
+programme. The third is the extension from two ordered confounders to
+$q$ monotone stages, where the telescoping structure of \cref{eq:seq-eif}
+suggests a corresponding sum of $q$ nonnegative variance increments. The paper
+is positioned as a focused methods contribution on the cost of complete-case
+coarsening rather than as a general solution to arbitrary nonmonotone missing
+confounders.
+
+\ifinternal
+\medskip
+\noindent\textbf{Internal readiness note (not for submission).} Remaining items
+before the manuscript is sent out: independent semiparametric review of
+\cref{thm:eif,prop:drift,thm:gap}; a substantive data application; a learner
+library and misspecification grid; weight-truncation and near-positivity
+sensitivity analyses; and a public software interface with unit tests and
+documented diagnostics.
+\fi
 
 \section*{Data and code availability}
 
-All data analyzed in this manuscript are synthetic. The accompanying reproducibility package contains the Python programs, random seeds, replicate-level CSV files, numerical variance check, generated figures, and the manuscript source. The primary experiment can be reproduced with
+All data analyzed in this manuscript are synthetic. The accompanying reproducibility package contains the Python programs, random seeds, replicate-level CSV files, numerical variance check, generated figures, and the manuscript source. It is available at
+\url{https://github.com/KeivanBolouri/pattern-aware-sequential-mar}.
+The primary experiment can be reproduced with
 \begin{verbatim}
 python code/validate_sequential_mar.py --n 2500 --reps 2000 \
   --seed 20260831 --outdir results/main_verified
@@ -571,17 +784,65 @@ python code/validate_sequential_mar.py --n 2500 --reps 2000 \
 The original CCMAR implementation of \citet{levis2025} is available at
 \url{https://github.com/alexlevis/flex-ate-confounders-MAR}. That repository is cited as prior software and is not represented as the source of the new sequential-pattern code.
 
+\ifinternal
 \section*{Reproducibility audit}
 
-The primary Python simulation, summary bootstrap, and numerical variance identity were rerun in a clean working directory. The regenerated truth, replicate, summary, pattern-proportion, bootstrap-summary, and variance-identity files were byte-identical to the archived outputs. The sensitivity and estimated-nuisance summaries were recomputed from their replicate-level files and matched numerically. A smoke test of the cross-fitted implementation completed successfully. The supplied R mirror was not rerun because R was unavailable in the audit environment; Python outputs are therefore the authoritative results for this manuscript.
+The primary Python simulation, summary bootstrap, and numerical variance
+identity were rerun in a clean working directory. The regenerated truth,
+replicate, summary, pattern-proportion, bootstrap-summary, and variance-identity
+files were byte-identical to the archived outputs. The sensitivity and
+estimated-nuisance summaries were recomputed from their replicate-level files
+and matched numerically. The supplied R mirror was not rerun because R was
+unavailable in the audit environment; Python outputs are therefore the
+authoritative results for this manuscript.
+
+Separately, the data-generating law, the true ATE, the exact variance identity,
+and both sensitivity designs were reimplemented from the equations printed in
+\cref{sec:sim} by a reader with no access to the archived code. That
+reimplementation reproduced the pattern proportions, the sign and magnitude of
+the coarsening bias, the coverage collapse, and the theoretical variance ratio.
+Two discrepancies were recorded and are noted where they arise: the true ATE
+agrees only to five decimal places, and the deterministic value of the
+efficiency gain is $4.15\%$ against the $4.23\%$ obtained by Monte Carlo
+integration in the archived run.
+\else
+\section*{Reproducibility}
+
+All results in this paper are computed from synthetic data by the programs in
+the accompanying archive, which fixes every random seed. The primary simulation,
+the bootstrap summary, the numerical variance identity, and both sensitivity
+designs were rerun from a clean working directory and reproduced the archived
+outputs. In addition, the data-generating law, the target parameter, the exact
+variance identity, and both sensitivity designs were independently
+reimplemented from the equations printed in \cref{sec:sim} by a reader with no
+access to the archive; that reimplementation reproduced the pattern
+proportions, the coarsening bias, the coverage collapse, and the theoretical
+variance ratio. \Cref{app:inventory} lists the archive contents.
+\fi
 
 \section*{Acknowledgments}
 
-This draft was developed for scientific review. Individuals who contribute substantially to conception, derivation, software, interpretation, or revision should be considered for authorship only after explicit discussion and agreement. No additional author is assigned in this draft.
+\ifinternal
+This draft was developed for scientific review. Individuals who contribute
+substantially to conception, derivation, software, interpretation, or revision
+should be considered for authorship only after explicit discussion and
+agreement. No additional author is assigned in this draft.
+\else
+The author thanks the developers of the open-source scientific Python stack on
+which the reproducibility package depends.
+\fi
 
-\section*{Funding and conflicts of interest}
+\section*{Funding and competing interests}
 
-To be completed by the author before submission.
+\ifinternal
+To be completed by the author before submission: confirm whether any portion of
+this work was supported by institutional funds or fellowships, and state
+affiliations current at submission.
+\else
+This research received no specific grant from any funding agency in the public,
+commercial, or not-for-profit sectors. The author declares no competing
+interests.
+\fi
 
 \begin{thebibliography}{99}
 
@@ -661,7 +922,104 @@ Assessing treatment effects in observational data with missing confounders: a co
 
 \appendix
 \clearpage
-\section{Additional derivation of the efficiency identity}
+\section{Tangent space of the observed-data model}\label{app:tangent}
+
+\Cref{thm:eif} verifies that $D_{\seq}$ represents the pathwise derivative of
+$\psi$ along five families of score directions. That verification is exhaustive
+only if those families span the tangent space of $\mathcal M$. The following
+lemma supplies the missing step; it is the two-stage case of the
+coarsening-at-random tangent-space decomposition
+\citep{rrz1994,gill1997,tsiatis2006}, written out here because the causal
+argument depends on it.
+
+\begin{lemma}[Orthogonal decomposition of $L_2^0(P_O)$]\label{lem:tangent}
+Let \cref{ass:smar} hold and suppose in addition
+$\epsilon_\pi\le\pi_1(Z_0)\le1-\epsilon_\pi$ and
+$\epsilon_\pi\le\pi_2(Z_1)\le1-\epsilon_\pi$ almost surely, so that all three
+response patterns occur with positive probability. Then the subspaces
+$\mathcal T_0,\mathcal T_{\pi_1},\mathcal T_1,\mathcal T_{\pi_2},\mathcal T_2$
+defined in the proof of \cref{thm:eif} are closed, mutually orthogonal, and
+\[
+L_2^0(P_O)=\mathcal T_0\oplus\mathcal T_{\pi_1}\oplus\mathcal T_1
+\oplus\mathcal T_{\pi_2}\oplus\mathcal T_2 .
+\]
+Consequently the tangent space of $\mathcal M$ at $P_O$ is all of $L_2^0(P_O)$,
+and a pathwise differentiable parameter has a unique gradient.
+\end{lemma}
+
+\begin{proof}
+\emph{Orthogonality.} All five statements follow from iterated conditioning
+together with \cref{eq:mar1,eq:mar2}. Two are representative. For
+$s_0\in\mathcal T_0$ and $R_1s_1\in\mathcal T_1$,
+\[
+\E(s_0R_1s_1)=\E\{s_0\,\E(R_1s_1\mid Z_0)\}
+=\E\{s_0\pi_1\E(s_1\mid Z_0)\}=0,
+\]
+where $\E(s_1\mid Z_0,R_1=1)=\E(s_1\mid Z_0)$ by \cref{eq:mar1}. For
+$R_1s_1\in\mathcal T_1$ and $R_2s_2\in\mathcal T_2$, using $R_1R_2=R_2$ and
+conditioning first on $Z_1$,
+\[
+\E(R_1s_1R_2s_2)=\E\{s_1\,\E(R_2s_2\mid Z_1)\}
+=\E\{s_1\pi_1\pi_2\E(s_2\mid Z_1)\}=0,
+\]
+because \cref{eq:mar2} gives $\E(C_2\mid Z_1,R_1=1,L_2)=\pi_2(Z_1)$ and
+\cref{eq:mar1} gives $L_2\mid(Z_1,R_1=1)\sim L_2\mid Z_1$. The remaining pairs
+are obtained the same way, using $\E(R_1-\pi_1\mid Z_0)=0$ and
+$\E\{R_1(C_2-\pi_2)\mid Z_1\}=0$.
+
+\emph{Completeness.} The observed datum is determined by $Z_0$ on $\{R_1=0\}$,
+by $Z_1$ on $\{R_1=1,C_2=0\}$, and by $Z_2$ on $\{R_2=1\}$. Hence any
+$f\in L_2^0(P_O)$ can be written as
+\[
+f=\alpha(Z_0)\1\{R_1=0\}+\beta(Z_1)\1\{R_1=1,C_2=0\}+\gamma(Z_2)\1\{R_2=1\},
+\]
+and the two-sided bounds make $\alpha,\beta,\gamma$ square integrable. Define
+\begin{align*}
+h_2&=\E(\gamma\mid Z_1)-\beta, &\qquad s_2&=\gamma-\E(\gamma\mid Z_1),\\
+h_1&=\E\!\left[(1-\pi_2)\beta+\pi_2\E(\gamma\mid Z_1)\,\middle|\,Z_0\right]-\alpha,
+&\qquad s_1&=\beta+\pi_2h_2-\alpha-h_1,\\
+s_0&=\alpha+\pi_1h_1.
+\end{align*}
+By construction $\E(s_2\mid Z_1)=0$ and $\E(s_1\mid Z_0)=0$. Writing
+$D=s_0+(R_1-\pi_1)h_1+R_1s_1+R_1(C_2-\pi_2)h_2+R_2s_2$ and evaluating on each
+pattern gives $D=\alpha$ when $R_1=0$; $D=\alpha+h_1+s_1-\pi_2h_2=\beta$ when
+$R_1=1,C_2=0$; and $D=\beta+h_2+s_2=\gamma$ when $R_2=1$. Thus $D=f$. Finally
+\[
+\E(s_0)=\E\{(1-\pi_1)\alpha\}+\E\{\pi_1(1-\pi_2)\beta\}+\E(\pi_1\pi_2\gamma)=\E(f)=0,
+\]
+the three terms being exactly the pattern probabilities implied by
+\cref{ass:smar}. Uniqueness of the representation follows from orthogonality.
+\end{proof}
+
+\begin{remark}[Boundary cases]\label{rem:boundary}
+Only the completeness half uses the upper bounds on $\pi_1,\pi_2$, and their
+role is solely to guarantee that each of the three response patterns occurs
+with positive probability, so that $\alpha,\beta,\gamma$ are identified and
+square integrable.
+
+The two boundaries behave differently, and it is worth being precise about
+which subspace degenerates. Suppose $\pi_2\equiv1$, so that $L_2$ is observed
+whenever $L_1$ is and $R_2=R_1$. Then $C_2-\pi_2\equiv0$, so
+$\mathcal T_{\pi_2}=\{0\}$: there is no second response mechanism to score.
+But $\mathcal T_2=\{R_2s_2(Z_2):\E(s_2\mid Z_1)=0\}$ is \emph{not} affected,
+because the conditional law of $L_2$ given $Z_1$ is still a free component of
+the model and is still observed on $\{R_1=1\}$. The pattern
+$\{R_1=1,C_2=0\}$ is empty, $\beta$ drops out, and the construction in the proof
+goes through with $h_2=0$, $s_2=\gamma-\E(\gamma\mid Z_1)$,
+$s_1=\E(\gamma\mid Z_1)-\E(\gamma\mid Z_0)$ and $h_1=\E(\gamma\mid Z_0)-\alpha$,
+giving $L_2^0(P_O)=\mathcal T_0\oplus\mathcal T_{\pi_1}\oplus\mathcal T_1
+\oplus\mathcal T_2$. Symmetrically, $\pi_1\equiv1$ removes
+$\mathcal T_{\pi_1}$ and leaves $\mathcal T_1$ intact. In either case
+\cref{thm:eif} is unchanged: the term whose weight degenerates simply drops out
+of \cref{eq:seq-eif}.
+
+When $\pi_2=1$ on a set of positive probability rather than everywhere, the same
+argument applies on that set and the general one on its complement. There
+\cref{eq:variance-gap} contributes nothing, since its integrand carries the
+factor $1-\pi_2$; this is the degenerate boundary of \cref{cor:strict}.
+\end{remark}
+
+\section{Additional derivation of the efficiency identity}\label{app:efficiency}
 
 This appendix makes explicit the orthogonality used in \cref{thm:gap}. Let
 \[
@@ -692,7 +1050,7 @@ because the coefficient and $\Delta$ are measurable with respect to $Z_1$, where
 \end{align*}
 which establishes the identity.
 
-\section{Observed-score calculations for response mechanisms}
+\section{Observed-score calculations for response mechanisms}\label{app:scores}
 
 For completeness, consider $S_{\pi_1}=(R_1-\pi_1)h_1(Z_0)$. Using \cref{eq:eif-centered}, each inner product $\E(D_{\seq}S_{\pi_1})$ is zero: terms without $R_1$ vanish because $\E(R_1-\pi_1\mid Z_0)=0$, while terms containing the inverse-weighted residual increments vanish after conditioning successively on $Z_0$ and $Z_1$. For stage two, write the observed score as
 \[
@@ -708,31 +1066,9 @@ The $q_0$ and $q_1-q_0$ components are orthogonal because the centered Bernoulli
 is proportional, after response averaging, to
 $\E\{(D_{\F}-q_1)h_2(Z_1)\}=0$. Thus the canonical gradient carries no component in either response-mechanism tangent space, as required because the causal target is a functional of the full-data law alone.
 
-\section{Preliminary estimated-nuisance results}
+\input{appendix_crossfit.tex}
 
-\begin{table}[ht]
-\centering
-\caption{Cross-fitted implementation check ($n=4{,}000$, 100 replicates; true ATE 0.5).}
-\label{tab:crossfit}
-\small
-\begin{tabular}{@{}llrrrr@{}}
-\toprule
-Scenario & Method & Bias & Empirical SD & RMSE & Coverage \\
-\midrule
-CCMAR-compatible & Full data & 0.00165 & 0.03775 & 0.03759 & 96\% \\
- & Coarsened & 0.00632 & 0.08966 & 0.08943 & 95\% \\
- & Sequential & 0.00677 & 0.06757 & 0.06757 & 91\% \\
-\addlinespace
-Sequential-MAR & Full data & $-0.00111$ & 0.03522 & 0.03507 & 96\% \\
- & Coarsened & 0.00381 & 0.07828 & 0.07798 & 94\% \\
- & Sequential & $-0.00267$ & 0.06766 & 0.06737 & 94\% \\
-\bottomrule
-\end{tabular}
-\end{table}
-
-This study uses a different data-generating process from the oracle experiment and is not intended to reproduce its CCMAR-violation bias. Its purpose is software integration. With only 100 replicates, the Monte Carlo standard error of a 95\% coverage estimate is approximately 2.2 percentage points; conclusions about calibration require a substantially larger run.
-
-\section{Reproducibility inventory}
+\section{Reproducibility inventory}\label{app:inventory}
 
 The accompanying archive contains:
 \begin{itemize}[leftmargin=*]
@@ -740,11 +1076,12 @@ The accompanying archive contains:
 \item \texttt{code/summarize\_verified\_simulation.py}: Monte Carlo summaries and paired bootstrap;
 \item \texttt{code/verify\_variance\_identity.py}: numerical evaluation of \cref{eq:variance-gap};
 \item \texttt{code/oracle\_sensitivity\_simulation.py}: efficiency and identification sensitivity designs;
-\item \texttt{code/crossfit\_sequential\_ate.py}: estimated-nuisance cross-fitted implementation;
+\item \texttt{code/crossfit\_sequential\_ate.py}: cross-fitted estimated-nuisance implementation (\cref{app:crossfit});
+\item \texttt{code/independent\_check/}: a second, self-contained implementation of the data-generating law, the target parameter, the exact variance identity and both sensitivity designs, written from the printed equations alone and used as an external reproducibility check;
 \item \texttt{results/main\_verified/}: primary replicate-level results and summaries;
 \item \texttt{results/oracle\_sensitivity/}: sensitivity designs, replicates, and summaries;
-\item \texttt{results/crossfit/}: preliminary implementation-check replicates and summary;
-\item \texttt{paper.tex}: manuscript source and \texttt{figures/}: generated figures.
+\item \texttt{results/crossfit/}: cross-fitted replicates and summaries at each sample size, plus the layer decomposition;
+\item \texttt{paper.tex} and \texttt{appendix\_crossfit.tex}: manuscript source and \texttt{figures/}: generated figures.
 \end{itemize}
 
 \end{document}

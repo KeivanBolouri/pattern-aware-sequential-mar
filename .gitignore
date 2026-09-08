@@ -27,6 +27,10 @@ venv/
 scratch_results/
 tmp/
 
+# Local download bundle (not part of the GitHub repo)
+paper missing data/
+paper-missing-data.zip
+
 # Operating systems and editors
 .DS_Store
 Thumbs.db
