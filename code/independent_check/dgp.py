@@ -1,5 +1,5 @@
 """Independent re-implementation of the data-generating process in Section 6.1 of
-'Using Partially Observed Confounder Patterns under Monotone Sequential MAR'.
+'Efficient estimation and the cost of complete-case coarsening under monotone sequential MAR'.
 
 Nothing here is derived from the author's archived code; everything is built from
 the equations printed in the manuscript.  Written for an external reproduction

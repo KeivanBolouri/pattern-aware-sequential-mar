@@ -1,6 +1,6 @@
 cff-version: 1.2.0
 message: "If you use this research draft or code, please cite it as an unpublished manuscript."
-title: "Pattern-aware causal estimation with monotone partially observed confounders"
+title: "Efficient estimation and the cost of complete-case coarsening under monotone sequential MAR"
 type: software
 authors:
   - family-names: "Bolouri Siahkhalehsar"
@@ -20,7 +20,7 @@ keywords:
   - sequential missing at random
 preferred-citation:
   type: article
-  title: "Using Partially Observed Confounder Patterns under Monotone Sequential MAR: Efficient Estimation and the Cost of Complete-Case Coarsening"
+  title: "Efficient estimation and the cost of complete-case coarsening under monotone sequential MAR"
   authors:
     - family-names: "Bolouri Siahkhalehsar"
       given-names: "Keivan"

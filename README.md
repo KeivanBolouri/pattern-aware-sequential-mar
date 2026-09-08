@@ -1,4 +1,4 @@
-# Pattern-aware causal estimation with monotone partially observed confounders
+# Efficient estimation and the cost of complete-case coarsening under monotone sequential MAR
 
 This repository contains the manuscript, source code, synthetic simulation
 outputs, result summaries, and figures for a two-stage sequential

@@ -12,7 +12,7 @@ A public GitHub repository holds this project for journal access.
 | Default branch | main |
 | Web URL | https://github.com/KeivanBolouri/pattern-aware-sequential-mar |
 | Clone URL | https://github.com/KeivanBolouri/pattern-aware-sequential-mar.git |
-| Short description | Efficient causal ATE estimation with monotone partially observed confounders under sequential MAR. |
+| Short description | Efficient estimation and the cost of complete-case coarsening under monotone sequential MAR. |
 
 This repository is public so that journal editors and reviewers can open the reproducibility package without a GitHub login.
 
