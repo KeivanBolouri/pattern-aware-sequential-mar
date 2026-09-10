@@ -1,0 +1,105 @@
+\section{Cross-fitted estimation with estimated nuisances}\label{app:crossfit}
+
+\subsection*{Observed-data implementation}
+
+Each sample is randomly divided into five folds. All basis transformations and fitted models used on a validation fold are trained on the other four folds. The outcome basis uses all training values of $Y$. The incomplete-data causal basis uses only $L_2$ values with $R_2=1$ in the training set. A separate full-data benchmark chooses its own basis using all training $L_2$ values. Missing covariates are represented by unavailable values: the implementation reads $L_1$ only when $R_1=1$ and $L_2$ only when $R_2=1$. There is no fitting, prediction, or knot selection using hidden simulated confounders in the incomplete-data procedures.
+
+Continuous coordinates use cubic B-splines with six empirical quantile knots, including the boundary knots, and no spline bias column. Each fitted regression includes an intercept. The design for $Z_0$ contains the spline in $Y$, $A$, and their interactions. The design for $Z_1$ is saturated in $(A,L_1)$, including their products with the spline in $Y$. The causal design contains the spline in $L_2$, $L_1$, and their interactions. Logistic regressions use an $\ell_2$ penalty with inverse regularization parameter $C=1$; ridge regressions use penalty $10^{-3}$. Hyperparameters are fixed across designs, sample sizes, and replicates. Logistic fitting allows at most 2,000 iterations, and a convergence warning stops the run instead of being silently suppressed.
+
+The response models are fitted on all training records for $\pi_1$ and $\rho$, and on $R_1=1$ records for $\pi_2$. Causal regressions are fitted on complete records with weights $1/(\widehat\pi_1\widehat\pi_2)$ for the sequential procedure and $1/\widehat\rho$ for the coarsened procedure. The sequential $Q_1$ regression uses complete records. Its $Q_0$ regression uses the augmented stage-two pseudo-outcome on training records with $R_1=1$. The coarsened projection regression uses complete records. These projection regressions use causal predictions fitted within the same outer training fold; there is no additional inner cross-fitting. The held-out fold is excluded from all these training operations.
+
+Fitted treatment probabilities are truncated to $[0.01,0.99]$, and fitted response probabilities to $[0.01,1]$. Oracle substitutions are evaluated without truncation. In the stress design the true propensity can lie outside the fitted interval, so fixed truncation does not preserve the true propensity and cannot be assumed asymptotically harmless. In the bounded design the truncation thresholds lie outside the true propensity range. No truncation-sensitivity result is claimed without a corresponding run in the supplement.
+
+\subsection*{Behavior across sample sizes}
+
+\begin{table}[htbp]
+\centering
+\begin{threeparttable}
+\caption{Estimated-nuisance performance in the Gaussian stress design.}
+\label{tab:crossfit-n}
+\small
+\setlength{\tabcolsep}{4pt}
+\begin{tabular}{@{}rlrrrrr@{}}
+\toprule
+$n$ & Estimator & Bias & SD & Mean SE & RMSE & Coverage \\
+\midrule
+\multicolumn{7}{l}{\textit{Common validity}} \\
+2,500 & Full data & $0.00023$ & $0.01193$ & $0.00947$ & $0.01193$ & 87.0\% \\
+ & Coarsened & $-0.00076$ & $0.04699$ & $0.03016$ & $0.04697$ & 84.0\% \\
+ & Sequential & $-0.00135$ & $0.04827$ & $0.03087$ & $0.04826$ & 84.0\% \\
+\addlinespace[3pt]
+5,000 & Full data & $0.00004$ & $0.00761$ & $0.00665$ & $0.00760$ & 91.2\% \\
+ & Coarsened & $0.00048$ & $0.02590$ & $0.01754$ & $0.02589$ & 85.6\% \\
+ & Sequential & $0.00053$ & $0.02712$ & $0.01786$ & $0.02711$ & 85.7\% \\
+\addlinespace[3pt]
+10,000 & Full data & $0.00042$ & $0.00573$ & $0.00471$ & $0.00574$ & 88.0\% \\
+ & Coarsened & $-0.00028$ & $0.01335$ & $0.00968$ & $0.01334$ & 85.0\% \\
+ & Sequential & $-0.00033$ & $0.01325$ & $0.00965$ & $0.01324$ & 84.8\% \\
+\addlinespace[3pt]
+20,000 & Full data & $-0.00020$ & $0.00417$ & $0.00337$ & $0.00417$ & 88.8\% \\
+ & Coarsened & $-0.00012$ & $0.00795$ & $0.00628$ & $0.00794$ & 87.6\% \\
+ & Sequential & $-0.00016$ & $0.00792$ & $0.00619$ & $0.00791$ & 88.4\% \\
+\addlinespace[3pt]
+\multicolumn{7}{l}{\textit{Sequential MAR only}} \\
+2,500 & Full data & $0.00040$ & $0.01189$ & $0.00954$ & $0.01189$ & 87.8\% \\
+ & Coarsened & $-0.03198$ & $0.03702$ & $0.02398$ & $0.04891$ & 61.9\% \\
+ & Sequential & $0.00104$ & $0.05048$ & $0.03204$ & $0.05047$ & 83.8\% \\
+\addlinespace[3pt]
+5,000 & Full data & $0.00027$ & $0.00784$ & $0.00671$ & $0.00784$ & 91.2\% \\
+ & Coarsened & $-0.03238$ & $0.01761$ & $0.01308$ & $0.03686$ & 32.2\% \\
+ & Sequential & $0.00076$ & $0.02027$ & $0.01546$ & $0.02027$ & 87.8\% \\
+\addlinespace[3pt]
+10,000 & Full data & $0.00005$ & $0.00536$ & $0.00473$ & $0.00536$ & 92.4\% \\
+ & Coarsened & $-0.03283$ & $0.01057$ & $0.00843$ & $0.03449$ & 8.0\% \\
+ & Sequential & $-0.00006$ & $0.01451$ & $0.01013$ & $0.01450$ & 85.8\% \\
+\addlinespace[3pt]
+20,000 & Full data & $0.00000$ & $0.00386$ & $0.00336$ & $0.00385$ & 90.0\% \\
+ & Coarsened & $-0.03300$ & $0.00697$ & $0.00575$ & $0.03372$ & 0.0\% \\
+ & Sequential & $0.00016$ & $0.00827$ & $0.00626$ & $0.00825$ & 89.6\% \\
+\addlinespace[3pt]
+\bottomrule
+\end{tabular}
+\begin{tablenotes}[flushleft]\footnotesize
+\item SD is the empirical standard deviation; mean SE is the average estimated standard error. Coverage uses nominal 95\% normal intervals. Replicate counts are 1,000, 1,000, 500, and 250 at increasing sample sizes. Coverage Monte Carlo SE is at most 1.58, 1.58, 2.24, and 3.16 percentage points, respectively.
+\end{tablenotes}
+\end{threeparttable}
+\end{table}
+Under common validity, the ratio of mean estimated SE to empirical SD for the sequential estimator is 0.64, 0.66, 0.73, 0.78 at the four increasing sample sizes. These ratios assess the scale of interval miscalibration directly. The finite-sample precision comparison is given by the empirical SDs, whereas \cref{eq:variance-gap} compares first-order efficiency bounds. They need not agree at these sample sizes. Outside common validity, the coarsened estimator's bias reflects its invalid identifying model as well as nuisance fitting.
+
+\FloatBarrier
+\subsection*{Oracle substitutions and implementation checks}
+
+\begin{table}[htbp]
+\centering
+\begin{threeparttable}
+\caption{Oracle-substitution diagnostics in the Gaussian design ($n=2{,}500$).}
+\label{tab:crossfit-layers}
+\footnotesize
+\setlength{\tabcolsep}{4pt}
+\begin{tabular}{@{}llrrrrrr@{}}
+\toprule
+Scenario & Known & Seq. bias & Seq. SD & Seq. cov. & CC bias & CC SD & CC cov. \\
+\midrule
+Common & None & $-0.00135$ & $0.04827$ & 84.0\% & $-0.00076$ & $0.04699$ & 84.0\% \\
+ & Causal & $0.00044$ & $0.01941$ & 96.0\% & $0.00077$ & $0.01877$ & 96.6\% \\
+ & Response & $-0.00015$ & $0.04446$ & 82.1\% & $0.00009$ & $0.04454$ & 82.8\% \\
+ & All & $0.00076$ & $0.01789$ & 96.8\% & $0.00107$ & $0.01830$ & 97.6\% \\
+\addlinespace
+Sequential & None & $0.00104$ & $0.05048$ & 83.8\% & $-0.03198$ & $0.03702$ & 61.9\% \\
+ & Causal & $-0.00037$ & $0.01934$ & 95.5\% & $-0.03241$ & $0.01832$ & 49.4\% \\
+ & Response & $0.00193$ & $0.04868$ & 82.2\% & $-0.03158$ & $0.03625$ & 59.2\% \\
+ & All & $-0.00113$ & $0.01660$ & 95.0\% & $-0.03321$ & $0.01855$ & 45.6\% \\
+\addlinespace
+\bottomrule
+\end{tabular}
+\begin{tablenotes}[flushleft]\footnotesize
+\item Causal: true $e,\mu_0,\mu_1$. Response: true $\pi_1,\pi_2,\rho$ throughout training and validation. All: true causal, response, and projection functions, with $Q_0^{\cc}$ for the coarsened procedure. There are 1,000 replicates per row except 500 for All. Corresponding configurations share random-number streams.
+\end{tablenotes}
+\end{threeparttable}
+\end{table}
+
+The causal-oracle option substitutes the true $e$ and both outcome regressions wherever $G$ is evaluated, including the training projections. The response-oracle option substitutes true $\pi_1,\pi_2,\rho$ in the causal training weights, the training pseudo-outcome for $Q_0$, and the final validation-fold augmentation. The all-oracle option also replaces the projection functions. True projection functions are projections of the true causal pseudo-outcome, so that option requires the causal-oracle option. Under sequential MAR alone, the coarsened all-oracle diagnostic uses $Q_0^{\cc}$, the complete-case conditional projection.
+
+For the sequential procedure under common validity, the empirical SD is $0.04827$ with all nuisances estimated, $0.01941$ with the causal functions known, and $0.04446$ with the response functions known. These comparisons identify sensitivity to the specified nuisance fitting choices; they do not show that every remaining discrepancy is caused by a single layer. Shared replicate seeds make the comparisons paired, and all replicate-level results are retained.
+
+The supplied regression checks verify invariance to hidden covariate values, oracle training weights, and equality of the all-oracle calculation with \cref{eq:seq-eif}. They also distinguish variance from MSE. These checks target implementation correctness; an all-oracle match alone neither validates estimated nuisances nor establishes nominal coverage.

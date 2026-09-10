@@ -1,3 +1,5 @@
+> **Manuscript update, 10 September 2026:** The corrected PDF and editable sources are now in [paper/](paper/), with the [revised PDF here](paper/paper.pdf). The complete corrected reproducibility archive is being synchronized in a follow-up commit. Earlier numerical outputs below are superseded; use the corrected archive once that update is complete.
+
 # Efficient estimation and the cost of complete-case coarsening under monotone sequential MAR
 
 This repository contains the manuscript, source code, synthetic simulation
