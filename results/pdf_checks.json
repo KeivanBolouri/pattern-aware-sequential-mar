@@ -1,0 +1,23 @@
+{
+  "pages": 24,
+  "latex_warnings": [],
+  "latex_errors": [],
+  "overfull_boxes": [],
+  "underfull_boxes": [],
+  "tables": 7,
+  "figures": 2,
+  "all_pages_visually_inspected": true,
+  "github_links": [
+    {
+      "url": "https://github.com/KeivanBolouri/pattern-aware-sequential-mar",
+      "status": 200,
+      "final_url": "https://github.com/KeivanBolouri/pattern-aware-sequential-mar"
+    },
+    {
+      "url": "https://github.com/alexlevis/flex-ate-confounders-MAR",
+      "status": 200,
+      "final_url": "https://github.com/alexlevis/flex-ate-confounders-MAR"
+    }
+  ],
+  "manuscript_change": "Only Data and code availability differs from paper/paper.tex at 7e54f0d8f00eaa89febb2bf0768748f862c4f20f; all other source files and figure bytes are unchanged."
+}

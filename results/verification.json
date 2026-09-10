@@ -1,0 +1,18 @@
+{
+  "status": "passed",
+  "estimated_nuisance_configurations": 18,
+  "oracle_scenarios": 2,
+  "sensitivity_configurations": 6,
+  "simulated_samples": 48500,
+  "replicate_estimator_rows": 179500,
+  "checks": [
+    "complete configuration grid",
+    "no missing or duplicate replicates",
+    "finite outputs",
+    "interval endpoints and coverage",
+    "all reported summary fields",
+    "centered variance reductions",
+    "population calibration",
+    "two-resolution variance identity"
+  ]
+}

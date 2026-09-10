@@ -1,0 +1,56 @@
+{
+  "config": {
+    "design": "stress",
+    "scenario": "seqmar",
+    "n": 2500,
+    "reps": 1000,
+    "tag": "stress_n2500",
+    "seed": 20260910,
+    "folds": 5,
+    "clip_e": 0.01,
+    "clip_pi": 0.01
+  },
+  "psi": 0.2558505160746848,
+  "seed_scheme": "SeedSequence([seed, design_id, scenario_id, n, replicate_1based])",
+  "warnings_policy": "ConvergenceWarning is fatal; no failed replicates omitted",
+  "environment": {
+    "python": "3.12.14",
+    "numpy": "2.3.5",
+    "scipy": "1.17.0",
+    "sklearn": "1.8.0"
+  },
+  "elapsed_seconds": 373.3360254764557,
+  "full": {
+    "bias": 0.0003953000123780859,
+    "mcse_bias": 0.0003761141819813389,
+    "sd": 0.011893774753520924,
+    "rmse": 0.011894396920793852,
+    "coverage": 0.878,
+    "mcse_cov": 0.010349685985574635,
+    "mean_se": 0.009535904543019788,
+    "mad": 0.007850434775655335,
+    "iqr_sd": 0.011597742381742975
+  },
+  "cc": {
+    "bias": -0.03197661619405626,
+    "mcse_bias": 0.0011708030198865483,
+    "sd": 0.03702404234244906,
+    "rmse": 0.04890718674066283,
+    "coverage": 0.619,
+    "mcse_cov": 0.015357050498061143,
+    "mean_se": 0.023979903540186108,
+    "mad": 0.03290256126213752,
+    "iqr_sd": 0.028997087002981325
+  },
+  "seq": {
+    "bias": 0.0010437855915046979,
+    "mcse_bias": 0.001596475292555354,
+    "sd": 0.05048498152658574,
+    "rmse": 0.05047052718905358,
+    "coverage": 0.838,
+    "mcse_cov": 0.011651437679531227,
+    "mean_se": 0.03203649258268292,
+    "mad": 0.02274826602594865,
+    "iqr_sd": 0.03322485264775478
+  }
+}

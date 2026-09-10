@@ -1,0 +1,67 @@
+{
+  "base": {
+    "psi": 0.2558505160746848,
+    "var_full": 0.27924469364094534,
+    "var_seq_common": 0.7622385911690198,
+    "var_cc_common": 0.7952399680634272,
+    "gap": 0.033001376894399095,
+    "var_seq_outside": 0.6636274161523181,
+    "coarsened_bias_outside": -0.03282288507125558,
+    "complete_common": 0.23983568491304627,
+    "complete_outside": 0.31184226647515745,
+    "neither": 0.10927772901089876,
+    "inverse_e": 4.042951031053721,
+    "inverse_one_minus_e": 5.648076899503732,
+    "G_fourth_moment": 105.2792516540374,
+    "reduction_pct": 4.1498639680754765,
+    "identity_residual": 8.31279489688086e-15,
+    "settings": {
+      "n_y": 160,
+      "n_gh": 80,
+      "ref_nodes": 160,
+      "ref_grid": 5201,
+      "proj_grid": 1601
+    }
+  },
+  "fine": {
+    "psi": 0.25585051607467,
+    "var_full": 0.2792446936408494,
+    "var_seq_common": 0.7622385911686134,
+    "var_cc_common": 0.7952399680630157,
+    "gap": 0.03300137689440172,
+    "var_seq_outside": 0.6636274161521487,
+    "coarsened_bias_outside": -0.03282288507126454,
+    "complete_common": 0.23983568491303772,
+    "complete_outside": 0.31184226647514635,
+    "neither": 0.10927772901089487,
+    "inverse_e": 4.0429510310533,
+    "inverse_one_minus_e": 5.648076899501801,
+    "G_fourth_moment": 105.27925164439921,
+    "reduction_pct": 4.1498639680779545,
+    "identity_residual": 5.828670879282072e-16,
+    "settings": {
+      "n_y": 320,
+      "n_gh": 160,
+      "ref_nodes": 320,
+      "ref_grid": 10401,
+      "proj_grid": 3201
+    }
+  },
+  "absolute_difference": {
+    "psi": 1.4765966227514582e-14,
+    "var_full": 9.592326932761353e-14,
+    "var_seq_common": 4.064526493152698e-13,
+    "var_cc_common": 4.1155967522854553e-13,
+    "gap": 2.6229018956769323e-15,
+    "var_seq_outside": 1.694200335577989e-13,
+    "coarsened_bias_outside": 8.958112029944232e-15,
+    "complete_common": 8.548717289613705e-15,
+    "complete_outside": 1.1102230246251565e-14,
+    "neither": 3.885780586188048e-15,
+    "inverse_e": 4.2099657093785936e-13,
+    "inverse_one_minus_e": 1.9308998844280723e-12,
+    "G_fourth_moment": 9.63818536092731e-09,
+    "reduction_pct": 2.4780177909633494e-12,
+    "identity_residual": 7.729927808952652e-15
+  }
+}

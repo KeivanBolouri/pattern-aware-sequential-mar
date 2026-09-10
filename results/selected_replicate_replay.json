@@ -1,0 +1,12 @@
+[
+  {
+    "design": "stress",
+    "replicate": 1,
+    "exact_csv_match": true
+  },
+  {
+    "design": "bounded",
+    "replicate": 1,
+    "exact_csv_match": true
+  }
+]

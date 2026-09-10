@@ -1,0 +1,10 @@
+test_all_oracle_matches_direct_equation_and_coarsened_projection (test_estimators.EstimatorTests.test_all_oracle_matches_direct_equation_and_coarsened_projection) ... ok
+test_bounded_design_and_target (test_estimators.EstimatorTests.test_bounded_design_and_target) ... ok
+test_oracle_response_controls_training_weights_and_no_response_fit (test_estimators.EstimatorTests.test_oracle_response_controls_training_weights_and_no_response_fit) ... ok
+test_unavailable_values_do_not_change_results (test_estimators.EstimatorTests.test_unavailable_values_do_not_change_results) ... ok
+test_variance_reduction_is_translation_invariant (test_estimators.EstimatorTests.test_variance_reduction_is_translation_invariant) ... ok
+
+----------------------------------------------------------------------
+Ran 5 tests in 1.572s
+
+OK
