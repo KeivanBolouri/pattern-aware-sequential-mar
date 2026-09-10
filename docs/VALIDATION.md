@@ -35,6 +35,5 @@ The Gaussian stress design remains difficult: sequential coverage is 83.8% to 89
 
 The 24-page PDF compiles with no LaTeX errors, warnings, or overfull/underfull box warnings. All pages were inspected visually, and both GitHub URLs return HTTP 200. The seven tables and two figures are present.
 
-The repository cleanup changes only the **Data and code availability** paragraph in the manuscript relative to commit `7e54f0d8f00eaa89febb2bf0768748f862c4f20f`. All other manuscript text, title, authors, equations, references, formatting commands, included LaTeX sections, and figure files are preserved. Shortening the paragraph naturally reflows the following text. The numerical-section generator reproduces both included LaTeX files byte for byte.
 
-The five implementation tests and verification of all 179,500 result rows were rerun successfully for this package. Scientific simulation results were not changed during this cleanup.
+
